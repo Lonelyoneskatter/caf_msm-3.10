@@ -878,6 +878,15 @@ EXPORT_SYMBOL(tasha_set_spkr_mode);
 
 static enum codec_variant codec_ver;
 
+
+// ZTE_chenjun
+#if !defined(CONFIG_SOUNDWIRE_WCD_CTRL)
+int swrm_wcd_notify(struct platform_device *pdev, u32 id, void *data)
+{
+	return 0;
+}
+#endif
+
 static void tasha_enable_sido_buck(struct snd_soc_codec *codec)
 {
 	struct tasha_priv *tasha = snd_soc_codec_get_drvdata(codec);
@@ -4727,6 +4736,8 @@ static int tasha_codec_enable_spline_resampler(struct snd_soc_dapm_widget *w,
 static int tasha_codec_enable_swr(struct snd_soc_dapm_widget *w,
 		struct snd_kcontrol *kcontrol, int event)
 {
+// ZTE_chenjun
+#if defined(CONFIG_SOUNDWIRE_WCD_CTRL)
 	struct snd_soc_codec *codec = w->codec;
 	struct tasha_priv *tasha;
 	int i, ch_cnt;
@@ -4770,6 +4781,7 @@ static int tasha_codec_enable_swr(struct snd_soc_dapm_widget *w,
 	}
 	dev_dbg(tasha->dev, "%s: current swr ch cnt: %d\n",
 		__func__, tasha->rx_7_count + tasha->rx_8_count);
+#endif
 
 	return 0;
 }
